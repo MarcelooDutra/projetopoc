@@ -1,0 +1,352 @@
+<style type="text/css">
+    .swal2-container.swal2-center>.swal2-popup {
+        width: 100%!important;
+        height: 100%!important;
+        max-width: 800px!important;
+        max-height: 600px!important;
+    }
+    .swal-text{
+        max-height: 10em;  /* To be adjusted as you like */
+        overflow-y: scroll;
+        width: 100%;
+    }
+</style>
+
+<div class="contentpanel">
+    <div class="panel panel-default" style="margin-bottom: 3px;border-radius: 0px 3px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Matrícula</h4>
+            <p>Detalhes da Matrícula</p>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th class="text-right" style="width: 20%">ID</th>
+                            <td>#<?= $order->id; ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Matriculado por</th>
+                            <td><?= $created->name; ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Data da Matrícula</th>
+                            <td><?= $order->created ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Aluno</th>
+                            <td><?= $order->user->name; ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-right" style="width: 20%">CPF</th>
+                            <td><?= $order->user->cpf; ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Status</th>
+                            <td><?= $status_order[$order->order_type_id]; ?></td>
+                        </tr>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Método</th>
+                            <td>Liberação do Parceiro</td>
+                        </tr>
+                        <?php if ($hidden_value): ?>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Valor</th>
+                            <td>R$ <?= number_format($schoolCourse->value,2,",","."); ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <th class="text-right" style="width: 20%">Dados de Acesso</th>
+                            <td>
+                                <button id="propview" type="button" class="btn btn-default btn-xs" 
+                                        data-container="body" data-toggle="popover" 
+                                        data-placement="top"
+                                        data-html=true
+                                        data-content="<a href='' id='btnShowData'>Visualizar na Tela</a> <br>
+                                        <a href='' id='btnSendEmail' style='margin-top:10px;'>Enviar por E-mail</a>">
+                                        Ver <i class="fa fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->   
+        </div>
+    </div>
+    
+    <div class="panel panel-default" style="margin-bottom: 3px;border-radius: 0px 3px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Curso</h4>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Curso</th>
+                            <th>Status Detran</th>
+                            <th>CNH</th>
+                            <th>Categoria CNH</th>
+                            <th>Renach</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><?= $order->order_courses[0]->course->id; ?></td>
+                            <td><?= $order->order_courses[0]->course->name; ?></td>
+                            <td><?= $status[$order->order_courses[0]->status_detran_id]; ?></td>
+                            <td><?= $order->order_courses[0]->cnh; ?></td>
+                            <td><?= $order->order_courses[0]->cnh_category; ?></td>
+                            <td><?= $order->order_courses[0]->renach; ?></td>
+                        </tr>
+                    </tbody>
+                </table>    
+            </div>
+        
+        </div>
+    </div>
+    <div class="panel panel-default" style="margin-bottom: 3px;border-radius: 0px 3px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Logs de comunicação</h4>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>DATA DO LOG</th>
+                            <th>ROTINA</th>
+                            <th>CÓDIGO</th>
+                            <th>RETORNO</th>
+                            <th>CURSO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($order->log_detrans as $log): ?>
+                        <tr>
+                            <td><?= $log->id ?></td>
+                            <td><?= $log->data_log ?></td>
+                            <td><?= $log->rotina ?></td>
+                            <td><?= $log->codigo_retorno ?></td>
+                            <td><?= $log->mensagem_retorno ?></td>
+                            <td><?= $order->order_courses[0]->course->name; ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>    
+            </div>
+        
+        </div>
+    </div>
+    <!--  Simulados -->
+    <div class="panel panel-default" style="margin-bottom: 3px;border-radius: 0px 3px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Simulados</h4>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><?= __('Id') ?></th>
+                            <th scope="col"><?= __('Módulo') ?></th>
+                            <th scope="col"><?= __('Nota mínima') ?></th>
+                            <th scope="col"><?= __('Resultato') ?></th>
+                            <th scope="col"><?= __('Status') ?></th>
+                            <th scope="col"><?= __('Feito em') ?></th>
+                            <th scope="col" class="actions">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($simulates as $simulate): ?>
+                        <tr>
+                            <td><?= $simulate->id ?></td>
+                            <td><?= $simulate->module->name ?></td>
+                            <td><?= $simulate->order->order_courses[0]->course->value_module_avaliation ?>%</td>
+                            <td><?= $simulate->score ?>%</td>
+                            <td>
+                                <?php if($simulate->approved): ?>
+                                    <span class="badge badge-success">Aprovado</span>
+                                <?php else: ?>
+                                    <span class="badge badge-error">Reprovado</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= $simulate->created ?></td>
+                            <td></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>    
+            </div>
+        
+        </div>
+    </div>
+    <!-- Simulados -->
+    <!-- Avaliações -->
+    <div class="panel panel-default" style="margin-bottom: 3px;border-radius: 0px 3px;">
+        <div class="panel-heading">
+            <h4 class="panel-title">Avaliações</h4>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><?= __('Id') ?></th>
+                            <th scope="col"><?= __('Curso') ?></th>
+                            <th scope="col"><?= __('Nota mínima') ?></th>
+                            <th scope="col"><?= __('Resultato') ?></th>
+                            <th scope="col"><?= __('Status') ?></th>
+                            <th scope="col"><?= __('Feito em') ?></th>
+                            <th scope="col" class="actions">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($tests as $test): ?>
+                        <tr>
+                            <td><?= $test->id ?></td>
+                            <td><?= $test->course->name ?></td>
+                            <td><?= $test->course->value_course_avaliation ?>%</td>
+                            <td><?= $test->score ?>%</td>
+                            <td>
+                                <?php if($test->approved): ?>
+                                    <span class="badge badge-success">Aprovado</span>
+                                <?php else: ?>
+                                    <span class="badge badge-error">Reprovado</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= $test->created ?></td>
+                            <td></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>    
+            </div>
+        
+        </div>
+    </div>
+    <!-- Avaliações -->
+</div>
+
+<?php $this->append('script') ?>
+
+    <?= $this->Html->script([
+        'jquery-1.10.2.min.js',
+        '//cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js'
+    ]); ?>
+
+    
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            });
+            
+            setTimeout(function () {
+                var result = `<?= $log->codigo_retorno ?>`;
+                var alert_type = (result == 0 || result == 200) ? 'info' : 'error';
+                var message = (result == 0) ? 'Matrícula realizada com sucesso' : `<?= $log->mensagem_retorno ?>`;
+                var data = null;
+                
+                var msg = `<?= $_SESSION['msg'] ?>`; 
+                
+                if (alert_type == 'error' && (msg.length != 0) ){
+                    $('.contentpanel').css('display','none');
+                    //setTimeout(function () {
+                        //window.history.go(-1);
+                    //}, 9000);
+                    
+                    data = 'Matrícula não realizada, tente novamente ou entre em contato com o Suporte!';
+                    
+                }else{
+                    
+                    data = `<div id="txtdata" style="text-align:left;margin-top:5px;">` + 
+                    `<p style="font-size:12px;"><strong style='font-weight: bold;'>Nome:</strong> <?= $order->user->name; ?></p><br>\n` +
+                    `<p style="font-size:12px;"><strong>Nº de inscrição:</strong> #<?= $order->id; ?></p>\n\n` +
+                    `<p style="font-size:12px;">Parabéns por ter adquirido o <?= $order->order_courses[0]->course->name; ?></p>\n\n` +
+                    `<p style="font-size:12px;"><strong>Siga esses 2 passos para ter acesso ao curso:</strong></p>\n\n` +  
+                    `<p style="font-size:12px;">1. Acesse o site: <a href="https://especializadoonline.com.br/">https://www.especializadoonline.com.br/</a></p>\n\n` + 
+                    `<p style="font-size:12px;">2. Digite seu login e senha na página de nossa plataforma e clique no botão “Acessar”.</p>\n\n` +
+                    `<p style="font-size:12px;"><strong>Login:</strong> <?= $order->user->username; ?></p>\n\n` +
+                    `<p style="font-size:12px;"><strong>Senha:</strong> <span id="senha"><?= substr(preg_replace('/[^0-9]/', '',$order->user->username), -4) ?></span></p>\n\n` +
+                    `<p style="font-size:12px;">Seu login são os números do seu CPF e sua senha são os 4 últimos dígitos do seu CPF.</p>\n\n` +
+                    `<p style="font-size:12px;">Se houver a necessidade de suporte técnico entre em contato conosco por meio dos canais de comunicação</p>\n\n` +
+                    `<p style="font-size:12px;">Central de Atendimento: 0800 761 6151</p>\n\n` +
+                    `<p style="font-size:12px;">WhatsApp de Suporte ao Aluno: <a href="https://api.whatsapp.com/send?phone=5521970900970&amp;text=" target="_blank">(21) 97090-0970</a></p>\n\n` +
+                    `<br><center><button class='btn btn-success btnCopy' onclick="copyToClipboard('#txtdata')">Copiar Dados</button><a class="btn btn-info" style="margin-left:5px;" href="<?= $this->Url->build(['action' => 'add']); ?>">Nova Matrícula</a></center>` +
+                    `</div>`;
+                }
+
+                //msg = 1;
+                if (msg == 1){
+                    Swal.fire({
+                        title: message,
+                        icon: alert_type,
+                        padding: '5px',
+                        html: data,     
+                        showCloseButton: true,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        focusConfirm: false,
+                        allowOutsideClick: false
+                    }).then(function(e) {
+                        if (e.dismiss === 'close') {
+                            window.history.go(-1);
+                        }
+                    })
+                }
+                
+            }, 1000);
+            
+            $( document ).on( "click", "#btnShowData", function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Dados de Acesso',
+                    icon: 'info',
+                    padding: '5px',
+                    html: `<div id="txtdata" style="text-align:left;margin-top:5px;">` + 
+                    `<p style="font-size:12px;"><strong style='font-weight: bold;'>Nome:</strong> <?= $order->user->name; ?></p><br>\n` +
+                    `<p style="font-size:12px;"><strong>Nº de inscrição:</strong> #<?= $order->id; ?></p>\n\n` +
+                    `<p style="font-size:12px;">Parabéns por ter adquirido o <?= $order->order_courses[0]->course->name; ?></p>\n\n` +
+                    `<p style="font-size:12px;"><strong>Siga esses 2 passos para ter acesso ao curso:</strong></p>\n\n` +  
+                    `<p style="font-size:12px;">1. Acesse o site: <a href="https://especializadoonline.com.br/">https://www.especializadoonline.com.br/</a></p>\n\n` + 
+                    `<p style="font-size:12px;">2. Digite seu login e senha na página de nossa plataforma e clique no botão “Acessar”.</p>\n\n` +
+                    `<p style="font-size:12px;"><strong>Login:</strong> <?= $order->user->username; ?></p>\n\n` +
+                    `<p style="font-size:12px;"><strong>Senha:</strong> <span id="senha"><?= substr(preg_replace('/[^0-9]/', '',$order->user->username), -4) ?></span></p>\n\n` +
+                    `<p style="font-size:12px;">Seu login são os números do seu CPF e sua senha são os 4 últimos dígitos do seu CPF.</p>\n\n` +
+                    `<p style="font-size:12px;">Se houver a necessidade de suporte técnico entre em contato conosco por meio dos canais de comunicação</p>\n\n` +
+                    `<p style="font-size:12px;">Central de Atendimento: 0800 761 6151</p>\n\n` +
+                    `<p style="font-size:12px;">WhatsApp de Suporte ao Aluno: <a href="https://api.whatsapp.com/send?phone=5521970900970&amp;text=" target="_blank">(21) 97090-0970</a></p>\n\n` +
+                    `<br><center><button class='btn btn-success btnCopy' onclick="copyToClipboard('#txtdata')">Copiar Dados</button><a class="btn btn-info" style="margin-left:5px;" href="<?= $this->Url->build(['action' => 'add']); ?>">Nova Matrícula</a></center>` +
+                    `</div>`,    
+                    showCloseButton: true,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    focusConfirm: false,
+                    allowOutsideClick: false
+                });
+                $('#propview').popover('hide');
+            });
+            
+            $( document ).on( "click" , "#btnSendEmail", function(event){
+                event.preventDefault();
+                alert('Em Breve');
+                $('#propview').popover('hide');
+            });
+        });
+    </script>
+    
+<?php $_SESSION['msg'] = false; ?>
+
+<?php $this->end(); ?>
+
+<?php
+    $this->start('title');
+    echo 'Visualizar Matrícula';
+    $this->end('title');
+?>
